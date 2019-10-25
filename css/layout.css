@@ -1,0 +1,35 @@
+
+header {
+  background-image: radial-gradient(#0068b8,#3fabfd);
+  color: white;
+  height: 10rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.wrapper{
+  height: 91.5vh;
+}
+.wrapper::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+h1{
+  font-family: 'Shojumaru', cursive;
+  font-size: 40px;
+  letter-spacing: .4rem;
+  margin: 1rem;
+}
+
+footer {
+  height: 8rem;
+  background-image: radial-gradient(#0068b8,#3fabfd);
+  text-align: center;
+  color:white;
+  clear: both;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 8rem;
+}
