@@ -30,10 +30,7 @@ Horns.loadHorns1 = () => {
 };
 
 Horns.loadHorns2 = () => {
-    $
-    $('button[id="page2"]').on('click', function() {
-        Horns.page2Horns.forEach(horns => horns.render());
-    });
+  Horns.page2Horns.forEach(horns => horns.render());
 };
 
 Horns.prototype.renderOption = function() {
