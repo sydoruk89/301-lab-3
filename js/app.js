@@ -14,8 +14,8 @@ const keyWords = [];
 
 
 Horns.prototype.render = function() {
-  $('main').append('<div class="clone"></div>');
-  let hornClone = $('div[class="clone"]');
+  $('main').append('<section class="clone"></div>');
+  let hornClone = $('section[class="clone"]');
   let hornHtml = $('#photo-template').html();
   hornClone.html(hornHtml);
   hornClone.find('h2').text(this.name);
@@ -26,15 +26,19 @@ Horns.prototype.render = function() {
 }
 
 Horns.loadHorns1 = () => {
-  Horns.page1Horns.forEach(horns => horns.render());
+    Horns.page1Horns.forEach(horns => horns.render());
+    $('button[id="page1"]').on('click', function() {
+        $('section').hide();
+        Horns.page1Horns.forEach(horns => horns.render());
+    });
 };
 
 Horns.loadHorns2 = () => {
-    $
     $('button[id="page2"]').on('click', function() {
+        $('section').hide();
         Horns.page2Horns.forEach(horns => horns.render());
     });
-};
+}
 
 Horns.prototype.renderOption = function() {
   if (!keyWords.includes(this.keyword)){
