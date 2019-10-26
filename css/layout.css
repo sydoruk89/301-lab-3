@@ -1,26 +1,24 @@
 
 header {
-  background-image: radial-gradient(#0068b8,#3fabfd);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  background-image: linear-gradient(to top,#0062ad 0,#3fabfd);
   color: white;
-  height: 10rem;
+  height: 12rem;
   text-align: center;
   padding: 1rem;
 }
 
-.wrapper{
-  height: 91.5vh;
-}
-.wrapper::after {
-  content: "";
-  clear: both;
-  display: table;
-}
 
 h1{
+  width: 100%;
   font-family: 'Shojumaru', cursive;
   font-size: 40px;
   letter-spacing: .4rem;
   margin: 1rem;
+  align-self: center;
 }
 
 footer {

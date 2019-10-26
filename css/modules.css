@@ -3,16 +3,19 @@ select{
   text-transform: capitalize;
 }
 
-main section {
-  border: thick double black;
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+main div {
+  border: thick double #ccc;
   width: 25%;
-  float: left;
   height: 32rem;
   text-align: center;
   padding: 1.5rem;
 }
 
-section img{
+div img{
   filter: grayscale(60%);
   width: 100%;
   height: 25rem;
@@ -26,16 +29,33 @@ img:hover{
   transform: scale(1.1);
 }
 
-section h2 {
+div h2 {
   font-family: 'Shojumaru', cursive;
   letter-spacing: .1rem;
   color: #ff7675;
 }
 
-section p {
+div p {
   font-size: 1.1rem;
 }
 
 #photo-template{
   display: none;
+}
+
+button {
+  width: 10rem;
+  padding: 1rem;
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  border-radius: 5rem;
+}
+button:hover {
+  background-color: #00589c;
+}
+
+select{
+  padding: .5rem;
+  border-radius: 5rem;
 }

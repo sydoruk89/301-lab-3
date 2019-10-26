@@ -1,5 +1,8 @@
 'use strict';
 
+const page1 = 'data/page-1.json';
+const page2 = 'data/page-2.json';
+
 function Horns(horns) {
   this.url = horns.image_url;
   this.name = horns.title;
@@ -8,47 +11,36 @@ function Horns(horns) {
   this.num = horns.horns;
 }
 
-Horns.page1Horns = [];
-Horns.page2Horns = [];
-const keyWords = [];
-
 
 Horns.prototype.render = function() {
-  $('main').append('<section class="clone"></div>');
-  let hornClone = $('section[class="clone"]');
-  let hornHtml = $('#photo-template').html();
-  hornClone.html(hornHtml);
-  hornClone.find('h2').text(this.name);
-  hornClone.find('img').attr('src', this.url);
-  hornClone.find('p').text(this.desc);
-  hornClone.removeClass('clone');
-  hornClone.attr('class', this.keyword);
-}
-
-Horns.loadHorns1 = () => {
-    Horns.page1Horns.forEach(horns => horns.render());
-    $('button[id="page1"]').on('click', function() {
-        $('section').hide();
-        Horns.page1Horns.forEach(horns => horns.render());
-    });
+  let template = $('#photo-template').html();
+  let templateRender = Handlebars.compile(template);
+  return templateRender(this);
 };
 
-Horns.loadHorns2 = () => {
-    $('button[id="page2"]').on('click', function() {
-        $('section').hide();
-        Horns.page2Horns.forEach(horns => horns.render());
-    });
-}
 
-Horns.prototype.renderOption = function() {
-  if (!keyWords.includes(this.keyword)){
-    keyWords.push(this.keyword);
-    $('select').append(`<option value = ${this.keyword}>${this.keyword}</option>`);
-  }
+Horns.loadHorns = () => {
+  $('main div').remove();
+  Horns.allHorns.forEach(horns => {
+    $('#image-container').append(horns.render());
+  });
 };
 
-Horns.loadOptions1 = () => {
-  Horns.page1Horns.forEach((element) => element.renderOption());
+
+Horns.loadOptions = () => {
+  const keyWords = [];
+
+  $('option').not(':first').remove();
+
+  Horns.allHorns.forEach((element) => {
+    if (!keyWords.includes(element.keyword)){
+      keyWords.push(element.keyword);
+    }
+  });
+  keyWords.sort();
+
+  keyWords.forEach(keyword =>  $('select').append(`<option value = ${keyword}>${keyword}</option>`));
+
   $('select').on('change', function() {
     let selected = $(this).val();
     $('main div').hide();
@@ -59,47 +51,41 @@ Horns.loadOptions1 = () => {
   });
 };
 
-Horns.loadOptions2 = () => {
-  Horns.page2Horns.forEach((element) => element.renderOption());
-  $('select').on('change', function() {
-    let selected = $(this).val();
-    $('main div').hide();
-    $(`div[class="${selected}"]`).show();
-    if(selected === 'default'){
-      $('div').show();
-    }
-  });
+Horns.readJson = (element) => {
+  Horns.allHorns = [];
+  $('main').empty();
+  $.get(element, 'json')
+    .then(data => {
+      data.forEach(item => {
+        Horns.allHorns.push(new Horns(item));
+      });
+    })
+    .then(() => {
+      Horns.sortByTitle(Horns.allHorns);
+      Horns.loadHorns();
+      Horns.loadOptions();
+    });
 };
 
-Horns.readJson1 = () => {
-    $.get('data/page-1.json', 'json')
-    .then(data => {
-        data.forEach(item => {
-            Horns.page1Horns.push(new Horns(item));
-        });
-    })
-    .then(() => {
-        Horns.loadHorns1();
-        Horns.loadOptions1();
-    });
-}
+Horns.sortByTitle = (arr) => {
+  arr.sort( (a,b) => {
+    if (a.name < b.name) {
+      return -1;
+    } if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  })
+  return arr;
+};
 
+$(() => {
+  Horns.readJson(page1);
+  $('#page1').on('click', function(){
+    Horns.readJson(page1);
+  });
 
-Horns.readJson2 = () => {
-    $.get('data/page-2.json', 'json')
-    .then(data => {
-        data.forEach(item => {
-            Horns.page2Horns.push(new Horns(item));
-        });
-    })
-    .then(() => {
-        Horns.loadHorns2();
-        Horns.loadOptions2();
-    });
-}
-
-// ------load data on page------
-
-$(() => Horns.readJson1());
-$(() => Horns.readJson2());
-
+  $('#page2').on('click', function(){
+    Horns.readJson(page2);
+  });
+});
