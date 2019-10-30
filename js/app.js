@@ -8,7 +8,7 @@ function Horns(horns) {
   this.name = horns.title;
   this.desc = horns.description;
   this.keyword = horns.keyword;
-  this.num = horns.horns;
+  this.horns = horns.horns;
 }
 
 
@@ -30,7 +30,7 @@ Horns.loadHorns = () => {
 Horns.loadOptions = () => {
   const keyWords = [];
 
-  $('option').not(':first').remove();
+  $('#sorting option').not(':first').remove();
 
   Horns.allHorns.forEach((element) => {
     if (!keyWords.includes(element.keyword)){
@@ -39,9 +39,9 @@ Horns.loadOptions = () => {
   });
   keyWords.sort();
 
-  keyWords.forEach(keyword =>  $('select').append(`<option value = ${keyword}>${keyword}</option>`));
+  keyWords.forEach(keyword =>  $('#sorting').append(`<option value = ${keyword}>${keyword}</option>`));
 
-  $('select').on('change', function() {
+  $('#sorting').on('change', function() {
     let selected = $(this).val();
     $('main div').hide();
     $(`div[class="${selected}"]`).show();
@@ -61,22 +61,53 @@ Horns.readJson = (element) => {
       });
     })
     .then(() => {
-      Horns.sortByTitle(Horns.allHorns);
+      Horns.sortBy(Horns.allHorns, 'name');
       Horns.loadHorns();
       Horns.loadOptions();
     });
 };
 
-Horns.sortByTitle = (arr) => {
+Horns.sortBy = (arr, property) => {
   arr.sort( (a,b) => {
-    if (a.name < b.name) {
+    let firstEl = a[property];
+    let secondEl = b[property];
+    if (firstEl < secondEl) {
       return -1;
-    } if (a.name > b.name) {
+    } if (firstEl > secondEl) {
       return 1;
     }
     return 0;
   })
   return arr;
+};
+
+Horns.handleSort = () => {
+  $('#sort-by').on('change', function() {
+    $('#sorting').val('default');
+    $('main div').remove();
+    Horns.sortBy(Horns.allHorns, $(this).val());
+    Horns.allHorns.forEach(element => {
+      $('#image-container').append(element.render());
+    });
+  });
+};
+
+Horns.handleImageEvents = () => {
+  $('main').on('click', 'div', function(event) {
+    event.stopPropagation();
+    let $clone = $(this).clone();
+    let elements = $clone[0].children;
+
+    $('section').addClass('active').html(elements);
+
+    $(window).scrollTop(0);
+  });
+
+  $('body').on('click', function() {
+    const $section = $('section');
+    $section.empty();
+    $section.removeClass('active');
+  });
 };
 
 $(() => {
@@ -88,4 +119,6 @@ $(() => {
   $('#page2').on('click', function(){
     Horns.readJson(page2);
   });
+  Horns.handleSort();
+  Horns.handleImageEvents();
 });
